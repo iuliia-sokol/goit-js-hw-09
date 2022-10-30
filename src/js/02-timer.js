@@ -41,6 +41,7 @@ timeMeasureEl.forEach(el => (el.style.fontSize = '20px'));
 timeMeasureEl.forEach(el => (el.style.fontWeight = '600'));
 
 const date = Date.now();
+let setDate = {};
 
 const options = {
   enableTime: true,
@@ -48,7 +49,9 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (selectedDates[0].getTime() <= date) {
+    const selectedDate = selectedDates[0].getTime();
+    if (selectedDate <= date) {
+      startBtnEl.disabled = true;
       Notify.warning('Please choose a date in the future', {
         width: '380px',
         position: 'right-top',
@@ -58,40 +61,73 @@ const options = {
         borderRadius: '12px',
       });
     }
-    // console.dir(selectedDates[0]);
+    if (selectedDate > date) {
+      startBtnEl.disabled = false;
+      setDate = selectedDate;
+    }
   },
 };
 
 const fp = flatpickr('input#datetime-picker', options);
 
-startBtnEl.addEventListener('click', onStartBtnClick);
-// startBtnEl.disabled = true;
+const daysEl = timerWrapperEl.querySelector('[data-days]');
+const hoursEl = timerWrapperEl.querySelector('[data-hours]');
+const minutesEl = timerWrapperEl.querySelector('[data-minutes]');
+const secondsEl = timerWrapperEl.querySelector('[data-seconds]');
 
-function onStartBtnClick(event) {}
+const timer = {
+  intervalID: null,
+  start() {
+    const startTimer = setDate;
+    timeValueEl.forEach(el => (el.style.backgroundColor = '#efd478'));
+    timeValueEl.forEach(el => (el.style.border = '2px solid #d6936d'));
+    timeMeasureEl.forEach(el => (el.style.color = '#d6936d'));
+
+    intervalID = setInterval(() => {
+      const currentTime = Date.now();
+      const deltaTime = startTimer - currentTime;
+      const { days, hours, minutes, seconds } = convertMs(deltaTime);
+      if (deltaTime <= 1000) {
+        this.stop();
+      }
+      daysEl.textContent = `${days}`;
+      hoursEl.textContent = `${hours}`;
+      minutesEl.textContent = `${minutes}`;
+      secondsEl.textContent = `${seconds}`;
+    }, 1000);
+  },
+
+  stop() {
+    startBtnEl.disabled = false;
+    clearInterval(intervalID);
+    timeValueEl.forEach(el => (el.style.border = '3px solid teal'));
+    timeValueEl.forEach(el => (el.style.backgroundColor = '#c1c9c9'));
+    timeMeasureEl.forEach(el => (el.style.color = 'teal'));
+    return;
+  },
+};
+
+startBtnEl.addEventListener('click', onStartBtnClick);
+
+function onStartBtnClick() {
+  timer.start();
+  startBtnEl.disabled = true;
+}
 
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
-
-  // Remaining days
-  const days = Math.floor(ms / day);
-  // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-
+  const days = addLeadingZero(Math.floor(ms / day));
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
+  const seconds = addLeadingZero(
+    Math.floor((((ms % day) % hour) % minute) / second)
+  );
   return { days, hours, minutes, seconds };
 }
 
-// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
-
 function addLeadingZero(value) {
-  // padStart();
+  return String(value).padStart(2, '0');
 }
