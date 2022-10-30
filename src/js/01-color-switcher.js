@@ -1,16 +1,23 @@
-// Напиши скрипт, який після натискання кнопки «Start»,
-// раз на секунду змінює колір фону < body > на випадкове значення,
-// використовуючи інлайн стиль.Натисканням на кнопку «Stop» зміна
-// кольору фону повинна зупинятися.
-// УВАГА
-// Враховуй, що на кнопку «Start» можна натиснути нескінченну кількість
-// разів.Зроби так, щоб доки зміна теми запущена, кнопка «Start» була
-// неактивною(disabled).
-
 const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
 const bodyEl = document.querySelector('body');
+const goBackEl = document.querySelector('p');
 let intervalID = null;
+
+bodyEl.style.display = 'flex';
+bodyEl.style.justifyContent = 'center';
+bodyEl.style.alignItems = 'center';
+bodyEl.style.paddingTop = '40px';
+goBackEl.style.position = 'absolute';
+goBackEl.style.top = '10px';
+goBackEl.style.left = '20px';
+startBtn.style.padding = '10px';
+startBtn.style.fontSize = '40px';
+startBtn.style.borderRadius = '12px';
+startBtn.style.marginRight = '20px';
+stopBtn.style.padding = '10px';
+stopBtn.style.fontSize = '40px';
+stopBtn.style.borderRadius = '12px';
 
 startBtn.addEventListener('click', onStartBtnClick);
 
@@ -19,6 +26,7 @@ function onStartBtnClick(event) {
   function changeBodyColor() {
     bodyEl.style.backgroundColor = getRandomHexColor();
     event.target.disabled = true;
+    stopBtn.disabled = false;
   }
 }
 
@@ -26,6 +34,7 @@ stopBtn.addEventListener('click', onStopBtnClick);
 
 function onStopBtnClick(event) {
   clearInterval(intervalID);
+  event.target.disabled = true;
   startBtn.disabled = false;
 }
 

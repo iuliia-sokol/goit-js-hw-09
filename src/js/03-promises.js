@@ -1,9 +1,3 @@
-// Напиши скрипт, який на момент сабміту форми викликає функцію
-// createPromise(position, delay) стільки разів, скільки ввели
-// в поле amount.Під час кожного виклику передай їй номер
-// промісу(position), що створюється, і затримку, враховуючи першу
-// затримку(delay), введену користувачем, і крок(step).
-
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const formEl = document.querySelector('.form');
