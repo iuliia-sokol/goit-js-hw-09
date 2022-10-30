@@ -24,16 +24,26 @@ startBtnEl.style.textTransform = 'uppercase';
 
 const timerWrapperEl = document.querySelector('.timer');
 timerWrapperEl.style.display = 'flex';
-timerWrapperEl.style.gap = '14px';
+timerWrapperEl.style.gap = '40px';
 timerWrapperEl.style.marginTop = '14px';
 timerWrapperEl.style.fontSize = '24px';
-const timeValueEl = document.querySelectorAll('.value');
+const timeDisplayWrapper = timerWrapperEl.querySelectorAll('.field');
+timeDisplayWrapper.forEach(el => (el.style.display = 'flex'));
+timeDisplayWrapper.forEach(el => (el.style.justifyContent = 'center'));
+timeDisplayWrapper.forEach(el => (el.style.alignItems = 'center'));
+timeDisplayWrapper.forEach(el => (el.style.flexDirection = 'column'));
+const timeValueEl = timerWrapperEl.querySelectorAll('.value');
+timeValueEl.forEach(el => (el.style.display = 'flex'));
+timeValueEl.forEach(el => (el.style.justifyContent = 'center'));
+timeValueEl.forEach(el => (el.style.alignItems = 'center'));
+timeValueEl.forEach(el => (el.style.width = '60px'));
+timeValueEl.forEach(el => (el.style.height = '60px'));
 timeValueEl.forEach(el => (el.style.fontWeight = '800'));
 timeValueEl.forEach(el => (el.style.border = '2px solid teal'));
 timeValueEl.forEach(el => (el.style.borderRadius = '50%'));
 timeValueEl.forEach(el => (el.style.padding = '5px 3px 5px 3px'));
 timeValueEl.forEach(el => (el.style.backgroundColor = '#c1c9c9'));
-const timeMeasureEl = document.querySelectorAll('.label');
+const timeMeasureEl = timerWrapperEl.querySelectorAll('.label');
 timeMeasureEl.forEach(el => (el.style.color = 'teal'));
 timeMeasureEl.forEach(el => (el.style.textTransform = 'uppercase'));
 timeMeasureEl.forEach(el => (el.style.fontFamily = 'Open Sans'));
@@ -83,7 +93,7 @@ const timer = {
     timeValueEl.forEach(el => (el.style.border = '2px solid #d6936d'));
     timeMeasureEl.forEach(el => (el.style.color = '#d6936d'));
 
-    intervalID = setInterval(() => {
+    this.intervalID = setInterval(() => {
       const currentTime = Date.now();
       const deltaTime = startTimer - currentTime;
       const { days, hours, minutes, seconds } = convertMs(deltaTime);
@@ -99,7 +109,7 @@ const timer = {
 
   stop() {
     startBtnEl.disabled = false;
-    clearInterval(intervalID);
+    clearInterval(this.intervalID);
     timeValueEl.forEach(el => (el.style.border = '3px solid teal'));
     timeValueEl.forEach(el => (el.style.backgroundColor = '#c1c9c9'));
     timeMeasureEl.forEach(el => (el.style.color = 'teal'));
